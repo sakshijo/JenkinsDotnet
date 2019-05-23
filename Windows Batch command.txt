@@ -1,0 +1,70 @@
+rem Stick rem to compile and run the setup files...
+
+
+d:
+
+cd %CC_UPDATE_DIR%
+
+rem Stick rem in front if you want to miss out the build for testing purposes...
+
+devenv.com Mppae.sln /clean
+
+devenv.com Mppae.sln /build %BUILD_TYPE%
+
+devenv.com Mppae.sln /build %BUILD_TYPE% /project MessengerService.Module
+
+devenv.com Mppae.sln /build %BUILD_TYPE% /project MppaeService.Module
+
+devenv.com Mppae.sln /build %BUILD_TYPE% /project PublicWebServices.Module
+
+devenv.com Mppae.sln /build %BUILD_TYPE% /project UatWebServices.Module
+
+devenv.com Mppae.sln /build %BUILD_TYPE% /project AdminWebServices.Module
+
+devenv.com Mppae.sln /build %BUILD_TYPE% /project Mppae.Setup
+
+
+rem Stick to create build folder...
+net use z: /delete 2> NUL
+
+net use z: \\10.162.69.128\builds$ /user:vf-ie\ie-ccadm %IECCADM_PASSWORD%
+
+
+
+
+set projdir=%CC_UPDATE_DIR%
+
+set releaseDir=z:\Builds for Integration
+
+set buildNum=%BUILD_NUMBER%
+
+SET drop=%BUILD_NUMBER%
+
+set buildType=%BUILD_TYPE%
+
+SET drop=%drop:~1,2%
+
+
+
+
+d:
+
+cd %projdir%
+
+
+
+
+rem Stick rem in front if you want to miss out the build for testing purposes...
+
+xcopy output\Mppae.Setup\%buildType%\*.* "%releaseDir%\DROP%drop%\%buildNum%\MPPAe\" /Y /I 
+
+xcopy Deployment\SetupScripts\*.cmd "%releaseDir%\DROP%drop%\%buildNum%\MPPAe\" /Y /I 
+
+echo copied to %releaseDir%\DROP%drop%\%buildNum%\MPPAe\
+
+
+
+
+cd %~dp0
+
+net use z: /Delete /y
